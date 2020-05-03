@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1twtxb7" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.7.1">
+  <bpmn:process id="rainbow" name="Rainbow" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" camunda:formKey="client">
+      <bpmn:outgoing>Flow_0soqtbe</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="bidOnePager" name="Bid One-Pager" camunda:formKey="bidOnePager">
+      <bpmn:incoming>Flow_0soqtbe</bpmn:incoming>
+      <bpmn:outgoing>Flow_1var5sp</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0soqtbe" sourceRef="StartEvent_1" targetRef="bidOnePager" />
+    <bpmn:endEvent id="Event_1h50wpr">
+      <bpmn:incoming>Flow_1var5sp</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1var5sp" sourceRef="bidOnePager" targetRef="Event_1h50wpr" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="rainbow">
+      <bpmndi:BPMNEdge id="Flow_1var5sp_di" bpmnElement="Flow_1var5sp">
+        <di:waypoint x="400" y="117" />
+        <di:waypoint x="492" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0soqtbe_di" bpmnElement="Flow_0soqtbe">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="300" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1uvo3i9_di" bpmnElement="bidOnePager">
+        <dc:Bounds x="300" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1h50wpr_di" bpmnElement="Event_1h50wpr">
+        <dc:Bounds x="492" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
