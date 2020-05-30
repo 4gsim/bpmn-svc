@@ -3,20 +3,20 @@
 const logger = require("../lib/logger")("main");
 const servicebus = require("servicebus");
 const registerHandlers = require("servicebus-register-handlers");
-const retry = require("servicebus-retry");
+const handler = require("../lib/handler");
+require("dotenv").config();
 
 const start = async (onStart) => {
   logger.debug("connecting to servicebus");
   const bus = await new Promise((resolve, reject) => {
     const localBus = servicebus.bus({
       url: "amqp://queue:5672",
+      enableConfirms: true,
     });
 
-    localBus.use(
-      retry({
-        store: new retry.MemoryStore(),
-      })
-    );
+    localBus.use(localBus.messageDomain());
+    localBus.use(localBus.correlate());
+    localBus.use(handler());
 
     localBus.on("ready", function () {
       resolve(localBus);
@@ -32,10 +32,13 @@ const start = async (onStart) => {
   await registerHandlers({
     bus,
     handleError: function handleError(msg, err) {
-      logger.error(err);
-      msg.handle.reject(function () {
-        throw err;
-      });
+      logger.error(
+        "error handling: %s. rejecting message w/ cid %s.",
+        err,
+        msg.cid
+      );
+      // logger.error(err);
+      msg.handle.reject(err);
     },
     path: "./lib/handlers",
   });

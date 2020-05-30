@@ -105,3 +105,6 @@ dist
 
 # Ignore DevSpace cache and log folder
 .devspace/
+
+# Ignore resources
+resources/

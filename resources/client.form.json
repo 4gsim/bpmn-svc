@@ -1,4 +1,6 @@
 {
+  "name": "client",
+  "title": "Client Form",
   "components": [
     {
       "label": "Client",
@@ -8,17 +10,9 @@
       "validate": {
         "required": true
       },
-      "key": "textField",
+      "key": "client",
       "type": "textfield",
       "input": true
-    },
-    {
-      "type": "button",
-      "label": "Submit",
-      "key": "submit",
-      "disableOnInvalid": true,
-      "input": true,
-      "tableView": false
     }
   ]
 }

@@ -1,42 +1,60 @@
 version: v1beta9
 images:
   app:
-    image: 172.18.19.24:5000/devspace
+    image: 192.168.208.12:5000/devspace
     preferSyncOverRebuild: true
     injectRestartHelper: false
-    cmd: ["npm", "run", "dev-verbose"]
+    cmd: ["npm", "run", "dev"]
     build:
       docker:
         skipPush: true
+vars:
+  - name: STORAGE_PATH
+    source: none
+    default: /var/lib/bpmn-svc
 deployments:
-- name: bpmn-svc
-  helm:
-    componentChart: true
-    values:
-      containers:
-      - image: 172.18.19.24:5000/devspace
-      service:
-        ports:
-        - port: 9229
+  - name: bpmn-svc
+    helm:
+      componentChart: true
+      values:
+        containers:
+          - image: 192.168.208.12:5000/devspace
+            volumeMounts:
+              - containerPath: ${STORAGE_PATH}
+                volume:
+                  name: bpmn-svc-data
+                  subPath: /bpmn-svc
+                  readOnly: false
+            env:
+              - name: STORAGE_PATH
+                value: ${STORAGE_PATH}
+              - name: DEBUG
+                value: "bpmn-svc:*"
+        volumes:
+          - name: bpmn-svc-data
+            size: "100Mi"
+        service:
+          ports:
+            - port: 9229
 dev:
   ports:
-  - imageName: app
-    forward:
-    - port: 9230
+    - imageName: app
+      forward:
+        - port: 9230
   # open:
   # - url: http://localhost:9229
   sync:
-  - imageName: app
-    excludePaths:
-    - .git/
-    uploadExcludePaths:
-    - Dockerfile
-    - node_modules/
-    - devspace.yaml
-    onUpload:
-      restartContainer: true
+    - imageName: app
+      excludePaths:
+        - .git/
+      uploadExcludePaths:
+        - Dockerfile
+        - node_modules/
+        - devspace.yaml
+      onUpload:
+        restartContainer: true
 profiles:
-- name: production
-  patches:
-  - op: remove
-    path: images.app.injectRestartHelper
+  - name: production
+    patches:
+      - op: remove
+        path: images.app.injectRestartHelper
