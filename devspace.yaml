@@ -1,13 +1,14 @@
 version: v1beta9
 images:
   app:
-    image: 192.168.208.12:5000/devspace
+    image: registry:5000/devspace
     preferSyncOverRebuild: true
     injectRestartHelper: false
     cmd: ["npm", "run", "dev"]
     build:
       docker:
         skipPush: true
+        disableFallback: true
 vars:
   - name: STORAGE_PATH
     source: none
@@ -18,12 +19,11 @@ deployments:
       componentChart: true
       values:
         containers:
-          - image: 192.168.208.12:5000/devspace
+          - image: registry:5000/devspace
             volumeMounts:
               - containerPath: ${STORAGE_PATH}
                 volume:
                   name: bpmn-svc-data
-                  subPath: /bpmn-svc
                   readOnly: false
             env:
               - name: STORAGE_PATH
@@ -32,10 +32,11 @@ deployments:
                 value: "bpmn-svc:*"
         volumes:
           - name: bpmn-svc-data
-            size: "100Mi"
+            hostPath:
+              path: ./.devspace/bpmn-svc-data
         service:
           ports:
-            - port: 9229
+            - port: 9230
 dev:
   ports:
     - imageName: app
